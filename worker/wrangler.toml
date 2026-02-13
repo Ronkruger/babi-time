@@ -1,0 +1,12 @@
+name = "babi-time-upload-api"
+main = "src/index.ts"
+compatibility_date = "2026-02-13"
+
+[[r2_buckets]]
+binding = "UPLOADS"
+bucket_name = "babi-time-uploads"
+
+[vars]
+ALLOWED_ORIGIN = "http://localhost:5173"
+PUBLIC_R2_BASE_URL = ""
+UPLOAD_TOKEN = ""
