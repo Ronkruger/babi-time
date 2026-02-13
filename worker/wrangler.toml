@@ -7,6 +7,6 @@ binding = "UPLOADS"
 bucket_name = "babi-time-uploads"
 
 [vars]
-ALLOWED_ORIGIN = "http://localhost:5173"
+ALLOWED_ORIGINS = "http://localhost:5173,https://ronron-bribri.netlify.app"
 PUBLIC_R2_BASE_URL = ""
 UPLOAD_TOKEN = ""

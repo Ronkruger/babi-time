@@ -9,10 +9,24 @@ export interface Env {
       }
     ) => Promise<unknown>;
   };
-  ALLOWED_ORIGIN: string;
+  ALLOWED_ORIGINS: string;
   PUBLIC_R2_BASE_URL: string;
   UPLOAD_TOKEN: string;
 }
+
+const parseAllowedOrigins = (value: string) =>
+  value
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+const resolveCorsOrigin = (request: Request, allowedOriginsRaw: string) => {
+  const requestOrigin = request.headers.get("Origin") || "";
+  const allowedOrigins = parseAllowedOrigins(allowedOriginsRaw);
+  if (!requestOrigin || allowedOrigins.length === 0) return "*";
+  if (allowedOrigins.includes(requestOrigin)) return requestOrigin;
+  return allowedOrigins[0] || "*";
+};
 
 const corsHeaders = (origin: string) => ({
   "Access-Control-Allow-Origin": origin,
@@ -33,7 +47,7 @@ const sanitizeFilename = (value: string) => value.replace(/[^a-zA-Z0-9._-]/g, "_
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
-    const origin = env.ALLOWED_ORIGIN || "*";
+    const origin = resolveCorsOrigin(request, env.ALLOWED_ORIGINS || "");
 
     if (request.method === "OPTIONS") {
       return new Response(null, {
